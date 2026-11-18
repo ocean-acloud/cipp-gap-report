@@ -3,6 +3,7 @@ import { CircleCheck, ClipboardPaste, Copy, Download, Loader2, TriangleAlert, X 
 import { toast } from "sonner"
 
 import { AdminGuide } from "@/components/admin-guide"
+import { TutorialVideo } from "@/components/tutorial-video"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -125,6 +126,7 @@ export function SetupView({
 
   return (
     <div className="space-y-4">
+      <TutorialVideo />
       {/* STEP 1 */}
       <Card>
         <CardHeader>
@@ -164,7 +166,7 @@ export function SetupView({
             >
               <ClipboardPaste /> Copy my CIPP permissions
             </a>
-            <p className="pt-1 text-sm"><b>Or</b> on the CIPP tab press <kbd className="rounded border px-1">F12</kbd> → Console, paste this and press Enter (if Edge blocks pasting, type <code>allow pasting</code> first):</p>
+            <p className="pt-1 text-sm"><b>Or</b> on the CIPP tab press <kbd className="rounded border px-1">F12</kbd> â†’ Console, paste this and press Enter (if Edge blocks pasting, type <code>allow pasting</code> first):</p>
             <pre className="max-h-24 overflow-auto rounded-md border bg-muted p-3 font-mono text-xs break-all whitespace-pre-wrap">{GRAB}</pre>
             <Button
               variant="outline"
@@ -173,7 +175,7 @@ export function SetupView({
             >
               <Copy /> Copy snippet
             </Button>
-            <p className="text-sm text-muted-foreground">Or copy <code>permissions</code> from TanStack → <code>authmecipp</code>. Any format works.</p>
+            <p className="text-sm text-muted-foreground">Or copy <code>permissions</code> from TanStack â†’ <code>authmecipp</code>. Any format works.</p>
           </More>
         </CardContent>
       </Card>
@@ -189,7 +191,7 @@ export function SetupView({
         </CardHeader>
         <CardContent className="space-y-3">
           {catalog.status === "loading" && (
-            <p className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" /> Loading the default catalog…</p>
+            <p className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" /> Loading the default catalogâ€¦</p>
           )}
           {catalog.status === "ready" && (
             <p className={cn("flex items-center gap-1.5 text-sm", hasCustom ? "text-muted-foreground" : "text-green-700 dark:text-green-400")}>
@@ -237,7 +239,7 @@ export function SetupView({
               }}
               rows={4}
               className="font-mono text-xs"
-              placeholder="Or paste catalog text here…"
+              placeholder="Or paste catalog text hereâ€¦"
             />
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" onClick={() => downloadText("catalog-template.csv", CATALOG_TEMPLATE)}>
