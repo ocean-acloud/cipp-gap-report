@@ -4,6 +4,7 @@ import { toast } from "sonner"
 
 import { AdminGuide } from "@/components/admin-guide"
 import { TutorialVideo } from "@/components/tutorial-video"
+import { ReportImport } from "@/components/report-import"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -226,6 +227,20 @@ export function SetupView({
                 </Button>
               )}
             </div>
+          </More>
+
+          <More title="Convert a saved HTML report to JSON">
+            <ReportImport
+              onUseMine={(t) => {
+                setPerms(t)
+                toast.success("Loaded into Step 1")
+              }}
+              onUseOther={(n, t) => {
+                setOtherName(n)
+                setOtherText(t)
+                toast.success("Loaded into \"Compare with another person\" (open that section to see it)")
+              }}
+            />
           </More>
         </CardContent>
       </Card>

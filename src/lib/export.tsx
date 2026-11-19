@@ -2,9 +2,12 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import { ReportDocument } from "@/components/report-document"
 import { ACCESS_LABEL, flatAll, type Filters, type Row } from "@/lib/catalog"
+import { buildReportJson, embedScript } from "@/lib/report-json"
 
 export interface ExportCtx {
   list: Row[]
+  /** every row (unfiltered), used for the embedded JSON */
+  all: Row[]
   filters: Filters
   mineCount: number
   catalogCount: number
@@ -28,14 +31,18 @@ function collectCss(): string {
 }
 
 export function buildDocument(ctx: ExportCtx): string {
-  const markup = renderToStaticMarkup(<ReportDocument {...ctx} date={stamp()} />)
+  const { list, filters, mineCount, catalogCount, source } = ctx
+  const markup = renderToStaticMarkup(
+    <ReportDocument list={list} filters={filters} mineCount={mineCount} catalogCount={catalogCount} source={source} date={stamp()} />
+  )
+  const data = embedScript(buildReportJson({ list, all: ctx.all, filters, source, date: stamp() }))
   return (
     `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">` +
     `<meta name="viewport" content="width=device-width,initial-scale=1">` +
     `<title>${fileName("pdf").replace(/\.pdf$/, "")}</title>` +
     `<style>${collectCss()}</style>` +
     `<style>@page{size:A4 landscape;margin:10mm}html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}</style>` +
-    `</head><body>${markup}</body></html>`
+    `</head><body>${markup}${data}</body></html>`
   )
 }
 

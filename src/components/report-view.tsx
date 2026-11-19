@@ -68,13 +68,14 @@ export function ReportView({
 
   const run = (f: (c: ExportCtx) => void, msg: string) => () => {
     if (!list.length) return toast.error("Nothing to export with the current filters.")
-    f({ list, filters, mineCount, catalogCount: rows.length, source })
+    f({ list, all: rows, filters, mineCount, catalogCount: rows.length, source })
     toast.success(msg)
   }
   const runCmp = (f: (c: CmpExportCtx) => void, msg: string) => () => {
     if (!compare || !cmpList.length) return toast.error("Nothing to export with the current filters.")
     f({
       rows: cmpList,
+      all: compare.rows,
       name: compare.name,
       mineCount,
       otherCount: compare.count,

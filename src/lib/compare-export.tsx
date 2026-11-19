@@ -3,9 +3,12 @@ import { renderToStaticMarkup } from "react-dom/server"
 import { CompareDocument } from "@/components/compare-document"
 import { ACCESS_LABEL } from "@/lib/catalog"
 import { fnDiff, type CmpRow } from "@/lib/compare"
+import { buildCompareJson, embedScript } from "@/lib/report-json"
 
 export interface CmpExportCtx {
   rows: CmpRow[]
+  /** every comparison row (unfiltered), used for the embedded JSON */
+  all: CmpRow[]
   name: string
   mineCount: number
   otherCount: number
@@ -29,14 +32,26 @@ function collectCss(): string {
 }
 
 export function buildCompareDocument(ctx: CmpExportCtx): string {
-  const markup = renderToStaticMarkup(<CompareDocument {...ctx} date={stamp()} />)
+  const { rows, name, mineCount, otherCount, source, filterLabel } = ctx
+  const markup = renderToStaticMarkup(
+    <CompareDocument
+      rows={rows}
+      name={name}
+      mineCount={mineCount}
+      otherCount={otherCount}
+      source={source}
+      filterLabel={filterLabel}
+      date={stamp()}
+    />
+  )
+  const data = embedScript(buildCompareJson({ rows, all: ctx.all, name, source, filterLabel, date: stamp() }))
   return (
     `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">` +
     `<meta name="viewport" content="width=device-width,initial-scale=1">` +
     `<title>${cmpFileName("pdf").replace(/\.pdf$/, "")}</title>` +
     `<style>${collectCss()}</style>` +
     `<style>@page{size:A4 landscape;margin:10mm}html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}</style>` +
-    `</head><body>${markup}</body></html>`
+    `</head><body>${markup}${data}</body></html>`
   )
 }
 
